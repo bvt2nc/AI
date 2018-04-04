@@ -9,7 +9,7 @@ from copy import deepcopy
 from time import time
 TEAM_NAME = "idk"
 MEMBERS = ["bvt2nc"]
-MAX_DEPTH = 4
+MAX_DEPTH = 2 #Found to have worked best... will win by timeout or outright win if other player isn't as smart
 token = ""
 oppToken = ""
 nCol = None
@@ -58,7 +58,8 @@ def get_move(state):
 def get_connect_move(state):
     moves = {}
     board = makeBoardUniform(state["board"])
-    print_board(board)
+    #board = state["board"]
+    #print_board(board)
 
     #set HEIGHT and WIDTH
     global nCol
@@ -79,7 +80,7 @@ def get_connect_move(state):
     if oppToken == "":
         #make move in center
         return {
-            "move": nCol / 2,
+            "move": ceil(nCol / 2),
             "team-code": state["team-code"]
         }
 
@@ -93,7 +94,7 @@ def get_connect_move(state):
             print(find_streak(temp, 1, 5))"""
             #moves[c] = -h(temp, 0, state["connect_n"])
 
-    print(moves)
+    #print(moves)
 
     best_h = -9999999999
     best_move = None
@@ -117,6 +118,14 @@ def make_fake_move(board, c, color):
             temp[c][r] = color
             break
     return temp
+
+def make_move(board, c, color):
+    for r in range(len(board[c])):
+        if board[c][r] == ' ':
+            board[c][r] = color
+            break
+    return board
+
 
 def simulate(board, depth, color, streak):
     #print_board(board)
@@ -276,7 +285,7 @@ def makeBoardUniform(board):
 
     for c in range(len(board)):
         r = len(board[c])
-        while r < height + 8:
+        while r < height + 5:
             board[c].append(" ")
             r += 1
 
@@ -301,15 +310,16 @@ def main():
         "game": "connect_more",
         "opponent-name": "mighty_ducks",
         "columns": 6,
-        "connect_n": 4,
+        "connect_n": 5,
         "your-token": "R",
         "board": [
-            ["Y", "R", "Y", "R"],
-            ["Y", "R", "R", "Y"],
-            ["Y", "R", "Y", "Y", "R"],
-            ["R", "Y", "R", "Y"],
-            ["R", "Y", "Y", "R"],
-            ["R", "R"],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
         ]
         #"board": [
         #    ["Y", "R", "Y", "Y", "R"],
@@ -320,8 +330,57 @@ def main():
         #    ["Y"],
         #]
     }
+    """player1Time = 30
+    player2Time = 30
+    state["board"] = makeBoardUniform(state["board"])
+    #set HEIGHT and WIDTH
+    global nCol
+    global nRow
+    nCol = len(state["board"])
+    nRow = len(state["board"][0])
+    flip = 1
+    winner = ""
+    while not winner_found(state["board"], state["connect_n"]):
+        state["your-token"] = "R"
+        global MAX_DEPTH
+        MAX_DEPTH = 2
+        start = time()
+        ret = get_move(state)
+        end = time()
+        player1Time -= (end - start)
+        if player1Time <= 0:
+            winner = "Player 2 wins by timeout"
+            break
+        state["board"] = make_move(state["board"], ret["move"], "R")
+        if winner_found(state["board"], state["connect_n"]):
+            winner = "Player 1 wins!"
+            break
 
-    print(get_move(state))
+        #now player 2
+        state["your-token"] = "Y"
+        flip = flip ^ 1
+        if flip == 1:
+            MAX_DEPTH = 4
+        else:
+            MAX_DEPTH = 2
+        MAX_DEPTH = 1
+        start = time()
+        ret = get_move(state)
+        end = time()
+        player2Time -= (end - start)
+        if player2Time <= 0:
+            winner = "Player 1 wins by timeout"
+            break
+        state["board"] = make_move(state["board"], ret["move"], "Y")
+        if winner_found(state["board"], state["connect_n"]):
+            winner = "Player 2 wins!"
+            break
+
+    print_board(state["board"])
+
+    print(winner)
+    print("Player 1 Time Remaining: %s" % (player1Time))
+    print("Player 2 Time Remaining: %s" % (player2Time))"""
 
 if __name__ == '__main__':
     main()

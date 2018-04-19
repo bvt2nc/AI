@@ -39,7 +39,7 @@ def opponent_has_pattern(state, info):
 		if len(opponent_moves) > pattern_length:
 			pattern = [opponent_moves[len(opponent_moves) - 1 - i] for i in range(pattern_length)]
 			pattern.append(state['last-opponent-play'])
-			print('patt array =-', pattern)
+			# print('patt array =-', pattern)
 			if all(pattern[0] == move for move in pattern):
 				return opponent_moves[0] #return move that was repeated
 		return -1 #-1 if no pattern
@@ -47,7 +47,7 @@ def opponent_has_pattern(state, info):
 
 def get_move_sym(state, info):
 	pattern = opponent_has_pattern(state, info)
-	print('pattern --- ', pattern)
+	# print('pattern --- ', pattern)
 
 	prospects = state['prospects']
 
@@ -55,26 +55,24 @@ def get_move_sym(state, info):
 	b = prospects[0][1]
 	c = prospects[1][0]
 	d = prospects[1][1]
-	print(a,b,c,d)
+
+	#Base cases for if dominant strategy exists
+	if a >= c and b >= d:
+		return 0
+	if c >= a and d >= b:
+		return 1
+	
 	#if there is a pattern and the opponent does not do too much better than us, choose the higher payout according to the pattern
 	if pattern == 0 or pattern == 1:
-		print('prospects',prospects)
+		# print('prospects',prospects)
 		zero_move = prospects[pattern][0]
 		one_move = prospects[pattern][1]
-		print('zero-move', zero_move)
+		# print('zero-move', zero_move)
 		if zero_move > one_move and one_move * 1.8 <= zero_move:
 			return 0
 		elif zero_move < one_move and zero_move * 1.8 <= one_move:
 			return 1
 
-	#Base cases for if dominant strategy exists
-	if a >= c and b >= d:
-		if state['prospects'][1][1] * 3 <= state['prospects'][0][1]:
-			print('hi')
-		return 0
-	if c >= a and d >= b:
-		return 1
-	
 	y = (d - b) / ((a - c) + (d - b))
 	x = 1 - y
 
@@ -82,10 +80,10 @@ def get_move_sym(state, info):
 	EU[0] = (a * x) + (b * y)
 	EU[1] = (c * x) + (d * y)
 
-	print("x: %s" % (x))
-	print("y: %s" % (y))
-	print("EU[0]: %s" % (EU[0]))
-	print("EU[1]: %s" % (EU[1]))
+	# print("x: %s" % (x))
+	# print("y: %s" % (y))
+	# print("EU[0]: %s" % (EU[0]))
+	# print("EU[1]: %s" % (EU[1]))
 
 	if EU[0] > EU[1]:
 		return 0
@@ -96,7 +94,7 @@ def get_move(state):
 	info = load_info()
 	move = get_move_sym(state, info)
 	save_info_sym(state, info)
-	print(state,info)
+	# print(state,info)
 	return {
 		'team-code': state['team-code'],
 		'move': move

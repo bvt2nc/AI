@@ -64,9 +64,12 @@ def get_move_sym(state, info):
 	
 	#if there is a pattern and the opponent does not do too much better than us, choose the higher payout according to the pattern
 	if pattern == 0 or pattern == 1:
-		# print('prospects',prospects)
-		zero_move = prospects[pattern][0]
-		one_move = prospects[pattern][1]
+		# print('pattern is', pattern)
+		# print('prospects')
+		# print(prospects[0])
+		# print(prospects[1])
+		zero_move = prospects[0][pattern]
+		one_move = prospects[1][pattern]
 		# print('zero-move', zero_move)
 		if zero_move > one_move and one_move * 1.8 <= zero_move:
 			return 0
@@ -101,31 +104,31 @@ def get_move(state):
 	}
 
 def main():
-# 	for i in range(5):
-# 		opponent_move = randint(0,1)
-# 		opponent_move = 1
-# 		state = {
-# 			"team-code": "eef8976e",
-# 			"game": "sym",
-# 			"opponent-name": "mighty-ducks",
-# 			"prev-repetitions": 10, #Might be None if first game ever, or other number
-# 			"last-opponent-play": opponent_move, #0 or 1 depending on strategy played
-# 			"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
-# 			"prospects": [
+	# for i in range(5):
+	# 	opponent_move = randint(0,1)
+	# 	opponent_move = 0
+	# 	state = {
+	# 		"team-code": "eef8976e",
+	# 		"game": "sym",
+	# 		"opponent-name": "mighty-ducks",
+	# 		"prev-repetitions": 10, #Might be None if first game ever, or other number
+	# 		"last-opponent-play": opponent_move, #0 or 1 depending on strategy played
+	# 		"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
+	# 		"prospects": [
 
-# 			[7000,0],
-# 			[1001,1]
+	# 		# [7000,0],
+	# 		# [1001,1]
 
-# 			# [1000,0],
-# 			# [1001,1]
+	# 		# [1000,0],
+	# 		# [1001,1]
 
-# 			# [10,99],
-# 			# [100,0] 
+	# 		[10,99],
+	# 		[100,0] 
 
-# 			]
-# 		}
-# 		print(get_move(state))
-# 		print()
+	# 		]
+	# 	}
+	# 	print(get_move(state))
+	# 	print()
 
 
 if __name__ == '__main__':

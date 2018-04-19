@@ -26,16 +26,51 @@ def save_info(info):
 	f.flush()
 	f.close()
 
-def get_move_sym(state):
+def save_info_sym(state, info):
+	if state["last-outcome"] is not None:
+		info.setdefault(state["opponent-name"],[]).append(state["last-opponent-play"])
+		save_info(info)
+
+def opponent_has_pattern(state, info):
+	opponent_name = state['opponent-name']
+	if opponent_name in info:
+		opponent_moves = info[opponent_name]
+		pattern_length = randint(3,4) #how long is long enough to be considered a pattern? use randint to avoid predictable strategy 
+		if len(opponent_moves) > pattern_length:
+			pattern = [opponent_moves[len(opponent_moves) - 1 - i] for i in range(pattern_length)]
+			pattern.append(state['last-opponent-play'])
+			print('patt array =-', pattern)
+			if all(pattern[0] == move for move in pattern):
+				return opponent_moves[0] #return move that was repeated
+		return -1 #-1 if no pattern
+	return -2 #-2 if player has not been played enough
+
+def get_move_sym(state, info):
+	pattern = opponent_has_pattern(state, info)
+	print('pattern --- ', pattern)
+
 	prospects = state['prospects']
 
 	a = prospects[0][0]
 	b = prospects[0][1]
 	c = prospects[1][0]
 	d = prospects[1][1]
+	print(a,b,c,d)
+	#if there is a pattern and the opponent does not do too much better than us, choose the higher payout according to the pattern
+	if pattern == 0 or pattern == 1:
+		print('prospects',prospects)
+		zero_move = prospects[pattern][0]
+		one_move = prospects[pattern][1]
+		print('zero-move', zero_move)
+		if zero_move > one_move and one_move * 1.8 <= zero_move:
+			return 0
+		elif zero_move < one_move and zero_move * 1.8 <= one_move:
+			return 1
 
 	#Base cases for if dominant strategy exists
 	if a >= c and b >= d:
+		if state['prospects'][1][1] * 3 <= state['prospects'][0][1]:
+			print('hi')
 		return 0
 	if c >= a and d >= b:
 		return 1
@@ -58,25 +93,42 @@ def get_move_sym(state):
 		return 1
 
 def get_move(state):
-	move = get_move_sym(state)
+	info = load_info()
+	move = get_move_sym(state, info)
+	save_info_sym(state, info)
+	print(state,info)
 	return {
 		'team-code': state['team-code'],
 		'move': move
 	}
 
 def main():
-	state = {
-		"team-code": "eef8976e",
-		"game": "sym",
-		"opponent-name": "mighty-ducks",
-		"prev-repetitions": 10, #Might be None if first game ever, or other number
-		"last-opponent-play": 1, #0 or 1 depending on strategy played
-		"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
-		"prospects": [
-		[10,99],
-		[100,0] ]
-	}
-	print(get_move(state))
+# 	for i in range(5):
+# 		opponent_move = randint(0,1)
+# 		opponent_move = 1
+# 		state = {
+# 			"team-code": "eef8976e",
+# 			"game": "sym",
+# 			"opponent-name": "mighty-ducks",
+# 			"prev-repetitions": 10, #Might be None if first game ever, or other number
+# 			"last-opponent-play": opponent_move, #0 or 1 depending on strategy played
+# 			"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
+# 			"prospects": [
+
+# 			[7000,0],
+# 			[1001,1]
+
+# 			# [1000,0],
+# 			# [1001,1]
+
+# 			# [10,99],
+# 			# [100,0] 
+
+# 			]
+# 		}
+# 		print(get_move(state))
+# 		print()
+
 
 if __name__ == '__main__':
 	main()

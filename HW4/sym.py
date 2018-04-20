@@ -83,10 +83,10 @@ def get_move_sym(state, info):
 	EU[0] = (a * x) + (b * y)
 	EU[1] = (c * x) + (d * y)
 
-	# print("x: %s" % (x))
-	# print("y: %s" % (y))
-	# print("EU[0]: %s" % (EU[0]))
-	# print("EU[1]: %s" % (EU[1]))
+	"""print("x: %s" % (x))
+	print("y: %s" % (y))
+	print("EU[0]: %s" % (EU[0]))
+	print("EU[1]: %s" % (EU[1]))"""
 
 	if EU[0] > EU[1]:
 		return 0
@@ -104,31 +104,32 @@ def get_move(state):
 	}
 
 def main():
-	# for i in range(5):
-	# 	opponent_move = randint(0,1)
-	# 	opponent_move = 0
-	# 	state = {
-	# 		"team-code": "eef8976e",
-	# 		"game": "sym",
-	# 		"opponent-name": "mighty-ducks",
-	# 		"prev-repetitions": 10, #Might be None if first game ever, or other number
-	# 		"last-opponent-play": opponent_move, #0 or 1 depending on strategy played
-	# 		"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
-	# 		"prospects": [
+	print()
+	"""for i in range(5):
+	 	opponent_move = randint(0,1)
+	 	opponent_move = 0
+	 	state = {
+	 		"team-code": "eef8976e",
+	 		"game": "sym",
+	 		"opponent-name": mighty-ducks",
+	 		"prev-repetitions": 10, #Might be None if first game ever, or other number
+	 		"last-opponent-play": opponent_move, #0 or 1 depending on strategy played
+	 		"last-outcome": 4, #Might be None if first game, or whatever outcome of play is
+	 		"prospects": [
 
-	# 		# [7000,0],
-	# 		# [1001,1]
+	 		# [7000,0],
+	 		# [1001,1]
 
-	# 		# [1000,0],
-	# 		# [1001,1]
+	 		# [1000,0],
+	 		# [1001,1]
 
-	# 		[10,99],
-	# 		[100,0] 
+	 		[100, 1000],
+	 		[200, 100] 
 
-	# 		]
-	# 	}
-	# 	print(get_move(state))
-	# 	print()
+	 		]
+	 	}
+	 	print(get_move(state))
+	# 	print()"""
 
 
 if __name__ == '__main__':

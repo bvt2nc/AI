@@ -27,28 +27,17 @@ def save_info(info):
 	f.write(json.dumps(info))
 	f.flush()
 	f.close()
-<<<<<<< HEAD
 
 def main():
 	simulate()
 	info = load_info()
 	print(info["bestslots"])
 
-=======
-
-def main():
-	simulate()
-	info = load_info()
-	print(info["bestslots"])
-
->>>>>>> d47e9c1c4d81a834531fddd69ad6c84966ce0d73
 def get_move(state):
 	info = load_info()
 	return get_move_bandit(state, info)
 	#save_info_bandit(state, info)
 	# print(state,info)
-
-<<<<<<< HEAD
 
 
 def phase_2_a(state, info):
@@ -86,10 +75,6 @@ def phase_2_b(state, info):
 
 
 def get_move_bandit(state, info):
-	game_type = state['game']
-=======
-def get_move_bandit(state, info):
->>>>>>> d47e9c1c4d81a834531fddd69ad6c84966ce0d73
 	if state["game"] == "phase_1":
 
 		slot = 0
@@ -128,7 +113,6 @@ def get_move_bandit(state, info):
 			"pull": slot,
 		}
 
-<<<<<<< HEAD
 	elif state["game"] == "phase_2_a":
 		# auctions = []
 		# return {
@@ -146,23 +130,6 @@ def get_move_bandit(state, info):
 		# 	"bid" : bid
 		# }
 		return phase_2_b(state, info)
-=======
-	if state["game"] == "phase_2_a":
-		auctions = []
-		return {
-			"team-code": state["team-code"],
-			"game": state["game"],
-			"auctions": auctions
-		}
-
-	if state["game"] == "phase_2_b":
-		bid = 0
-		return {
-			"team-code": state["team-code"],
-			"game": state["game"],
-			"bid" : bid
-		}
->>>>>>> d47e9c1c4d81a834531fddd69ad6c84966ce0d73
 
 def bestSlot(info):
 	bestslots = []
@@ -184,10 +151,6 @@ def bestSlot(info):
 
 	return bestslots[14][0]
 
-<<<<<<< HEAD
-=======
-
->>>>>>> d47e9c1c4d81a834531fddd69ad6c84966ce0d73
 def phase1(slots):
 	ret = None
 	lastcost = None

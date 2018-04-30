@@ -101,6 +101,7 @@ def bestSlot(info):
 		for el in info[str(i)]:
 			total = total + el
 		
+		total = total / 30
 		if len(bestslots) < 15:
 			bestslots.append((i, total))
 			bestslots = sorted(bestslots, key=lambda tup: tup[1])
@@ -151,7 +152,7 @@ def simulate():
 		alpha = randint(1, 5)
 		beta = randint(1, 5)
 		scale = randint(2, 10)
-		cost = randint(2, 10)
+		cost = 3 #randint(2, 10)
 		slots.append((alpha, beta, scale, cost))
 
 	credits = phase1(slots)

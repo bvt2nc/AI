@@ -30,8 +30,6 @@ def save_info(info):
 
 def main():
 	simulate()
-	info = load_info()
-	print(info["bestslots"])
 
 def get_move(state):
 	info = load_info()
@@ -42,10 +40,13 @@ def get_move(state):
 
 def phase_2_a(state, info):
 	top15 = info['bestslots']
+	auctions = []
+	for x, y in top15[-10:]:
+		auctions.append(x)
 	return {
 		"team-code": state['team-code'],
 		"game": "phase_2_a",
-		"auctions": [i[0] for i in top15[-10:0]]
+		"auctions": auctions
 	}
 
 def get_expected_value(top15, auction_number):
@@ -82,7 +83,7 @@ def get_move_bandit(state, info):
 		if "pull-to-gain" in info:
 			if info["pull-to-gain"] is not None:
 				slot = info["pull-to-gain"]
-			elif "last-pull" in info:
+			else:
 				lastpull = info["last-pull"]
 				slot = lastpull
 				#print(lastpull)
@@ -156,8 +157,8 @@ def phase1(slots):
 	lastcost = None
 	payoff = None
 	credits = 1000000
-	for i in range(3100):
-		print("Round: " + str(i))
+	for i in range(10000):
+		#print("Round: " + str(i))
 		if ret is None:
 			lastcost = None
 			payoff = None
@@ -182,6 +183,48 @@ def phase1(slots):
 
 	return credits
 
+def phase2(slots):
+
+	net = 0
+
+	state = {
+		"team-code": "aaaaaa",
+		"game": "phase_2_a",
+	}
+
+	print(get_move(state))
+
+	auctions = get_move(state)["auctions"]
+	print("auctions: " + str(auctions))
+
+	for machine in auctions:
+		state = {
+			"team-code": "aaaaaa",
+			"game": "phase_2_b",
+			"auction-number": machine,
+			"your-slots": [],
+			"auction-lists": [],
+		}
+		bid = get_move(state)["bid"]
+
+		alpha = slots[machine][0]
+		beta = slots[machine][1]
+		scale = slots[machine][2]
+		cost = slots[machine][3]
+
+		machineNet = 0	
+		#assume you win each bid
+		for i in range (10000):
+			payoff = np.random.beta(a=alpha, b=beta) * scale
+			machineNet = machineNet + payoff - cost
+
+		net = net + machineNet - bid
+		print("===========================================SLOT %s============================================" % (machine))
+		print("Bid: %s \t AverageNet: %s \t BetaMean: %s" % (bid, machineNet / 10000, betaMean(alpha, beta, scale)))
+		print("alpha: %s \t beta: %s \t scale: %s \t cost: %s" %(alpha, beta, scale, cost))
+
+	return net
+
 def simulate():
 	slots = []
 	for i in range(100):
@@ -192,7 +235,23 @@ def simulate():
 		slots.append((alpha, beta, scale, cost))
 
 	credits = phase1(slots)
-	print("Net: %s" % (1000000 - credits))
+	
+	phase1Net = 1000000 - credits
+	print("Phase 1 Net: %s" % (phase1Net))
+
+	info = load_info()
+	print(info["bestslots"])
+
+	expectedPhase2Net = 0
+	for machine, profit in info["bestslots"][-10:]:
+		expectedPhase2Net = expectedPhase2Net + (profit * 10000)
+	print("Expected Phase 2 Net: " + str(expectedPhase2Net))
+
+	phase2Net = phase2(slots)
+	print("Phase 2 Net: %s" % (phase2Net))
+	print("Total Net: %s" %(phase1Net + phase2Net))
+
+	print(slots[24])
 
 def generateData(alpha, beta, scale, size):
 	ret = []
